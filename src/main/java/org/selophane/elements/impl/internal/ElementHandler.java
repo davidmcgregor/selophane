@@ -1,6 +1,7 @@
 package org.selophane.elements.impl.internal;
 
 import org.selophane.elements.Element;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.pagefactory.ElementLocator;
 
@@ -37,18 +38,36 @@ public class ElementHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object object, Method method, Object[] objects) throws Throwable {
-        WebElement element = locator.findElement();
+        WebElement element;
+		try {
+			element = locator.findElement();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			//e1.printStackTrace();
+			element = null;
+		}
+		
+		if ("isElementPresent".equals(method.getName())) {
+			if (element== null)	{ 
+				return false; 
+			}
+			else return true;
+        }
+		
+		if (element==null)
+			throw new NoSuchElementException("Element not found");
 
-        if ("getWrappedElement".equals(method.getName())) {
-            return element;
-        }
-        Constructor cons = wrappingType.getConstructor(WebElement.class);
-        Object thing = cons.newInstance(element);
-        try {
-            return method.invoke(wrappingType.cast(thing), objects);
-        } catch (InvocationTargetException e) {
-            // Unwrap the underlying exception
-            throw e.getCause();
-        }
+		if ("getWrappedElement".equals(method.getName())) {
+			return element;
+		}
+		Constructor cons = wrappingType.getConstructor(WebElement.class);
+		Object thing = cons.newInstance(element);
+		try {
+			return method.invoke(wrappingType.cast(thing), objects);
+		} catch (InvocationTargetException e) {
+			// Unwrap the underlying exception
+			throw e.getCause();
+		}
+
     }
 }

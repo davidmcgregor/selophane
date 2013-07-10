@@ -2,6 +2,7 @@ package org.selophane.elements.impl;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.internal.Coordinates;
@@ -30,7 +31,19 @@ public class ElementImpl implements Element {
 
     @Override
     public void click() {
-        element.click();
+        click(0);
+    }
+    
+    /**
+     * Performs a click and then an explicit wait
+     * @param time
+     */
+    public void click(int time) {
+    	element.click();
+    	try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+		}
     }
 
     @Override
@@ -122,4 +135,13 @@ public class ElementImpl implements Element {
     public boolean elementWired() {
         return (element != null);
     }
+    
+    public boolean isElementPresent() {
+    	  try {
+    	    this.getTagName();
+    	    return true;  // Success!
+    	  } catch (NoSuchElementException ignored) {
+    	    return false;
+    	  }
+    	}
 }

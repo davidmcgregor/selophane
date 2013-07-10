@@ -17,4 +17,17 @@ public interface Element extends WebElement, WrapsElement, Locatable {
      * @return boolean true for an initialized WebElement, or false if we were somehow passed a null WebElement.
      */
     boolean elementWired();
+    
+    /**
+     * Performs a click and then an explicit wait
+     * @param time
+     */
+    public void click(int time);
+    
+    /**
+     * Returns true when the element exists.
+     *
+     * @return boolean true for exists, or false if NoSuchElementException is thrown.
+     */
+    public boolean isElementPresent();
 }
