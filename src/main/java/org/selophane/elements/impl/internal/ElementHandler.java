@@ -39,23 +39,22 @@ public class ElementHandler implements InvocationHandler {
     @Override
     public Object invoke(Object object, Method method, Object[] objects) throws Throwable {
         WebElement element;
+        Exception storedexception = null;
 		try {
 			element = locator.findElement();
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			//e1.printStackTrace();
+			//Don't throw an error yet as we want to know if we are calling isElementPresent and if so then return false.
+			storedexception = e1;
 			element = null;
 		}
 		
 		if ("isElementPresent".equals(method.getName())) {
-			if (element== null)	{ 
-				return false; 
-			}
-			else return true;
+			return !(element == null);
         }
 		
+		//now that we aren't calling isElementPresent, the exception should be thrown
 		if (element==null)
-			throw new NoSuchElementException("Element not found");
+			throw new Exception(storedexception);
 
 		if ("getWrappedElement".equals(method.getName())) {
 			return element;

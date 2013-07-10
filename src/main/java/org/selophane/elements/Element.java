@@ -25,7 +25,7 @@ public interface Element extends WebElement, WrapsElement, Locatable {
     public void click(int time);
     
     /**
-     * Returns true when the element exists.
+     * Returns true when the element exists. When using the factory look in {@link org.selophane.elements.impl.internal.ElementHandler#invoke()}
      *
      * @return boolean true for exists, or false if NoSuchElementException is thrown.
      */

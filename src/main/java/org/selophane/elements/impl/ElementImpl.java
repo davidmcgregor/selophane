@@ -135,13 +135,10 @@ public class ElementImpl implements Element {
     public boolean elementWired() {
         return (element != null);
     }
-    
-    public boolean isElementPresent() {
-    	  try {
-    	    this.getTagName();
-    	    return true;  // Success!
-    	  } catch (NoSuchElementException ignored) {
-    	    return false;
-    	  }
-    	}
+
+	@Override
+	public boolean isElementPresent() {
+		//This won't get executed when using the factory - look in ElementHandler for the real deal.
+		return elementWired();
+	}
 }
